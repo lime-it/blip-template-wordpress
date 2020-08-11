@@ -7,6 +7,13 @@
   "dependencies": {
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
+    "cli-ux": "^5.4.10",
+    "execa": "^4.0.3",
+    "fs-extra": "^9.0.1",
+    "inquirer": "^7.3.3",
+    "listr": "^0.14.3",
+    "mustache": "^4.0.1",
+    "node-fetch": "^2.6.0",
     "tslib": "^1.13.0"
   },
   "devDependencies": {
@@ -14,8 +21,14 @@
     "@oclif/plugin-help": "^3.2.0",
     "@oclif/test": "^1.2.6",
     "@types/chai": "^4.2.12",
+    "@types/execa": "^2.0.0",
+    "@types/fs-extra": "^8.1.1",
+    "@types/inquirer": "^7.3.0",
+    "@types/listr": "^0.14.2",
     "@types/mocha": "^5.2.7",
+    "@types/mustache": "^4.0.1",
     "@types/node": "^10.17.28",
+    "@types/node-fetch": "^2.5.7",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-oclif": "^3.1.0",
@@ -32,6 +45,7 @@
   },
   "files": [
     "/lib",
+    "/assets",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],

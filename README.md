@@ -29,40 +29,57 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`@lime.it/blip-template-wordpress hello [FILE]`](#limeitblip-template-wordpress-hello-file)
-* [`@lime.it/blip-template-wordpress template-wordpress:__setup [FILE]`](#limeitblip-template-wordpress-template-wordpress__setup-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up [FILE]`](#limeitblip-template-wordpress-template-wordpress__hook_postrun_up-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down [FILE]`](#limeitblip-template-wordpress-template-wordpress__hook_prerun_down-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__setup`](#limeitblip-template-wordpress-template-wordpress__setup)
 * [`@lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]`](#limeitblip-template-wordpress-template-wordpress__teardown-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:commit [FILE]`](#limeitblip-template-wordpress-template-wordpresscommit-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:extract [FILE]`](#limeitblip-template-wordpress-template-wordpressextract-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:load [FILE]`](#limeitblip-template-wordpress-template-wordpressload-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:pack [FILE]`](#limeitblip-template-wordpress-template-wordpresspack-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`](#limeitblip-template-wordpress-template-wordpresspublish-file)
 
-## `@lime.it/blip-template-wordpress hello [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress hello [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up [FILE]
 
 OPTIONS
   -f, --force
   -h, --help       show CLI help
   -n, --name=name  name to print
-
-EXAMPLE
-  $ oclif-example hello
-  hello world from ./src/hello.ts!
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/hello.ts)_
+_See code: [src/commands/template-wordpress/__hook_postrun_up.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__hook_postrun_up.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:__setup [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:__setup [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down [FILE]
 
 OPTIONS
   -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/__hook_prerun_down.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__hook_prerun_down.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:__setup`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:__setup
+
+OPTIONS
   -h, --help       show CLI help
   -n, --name=name  name to print
 ```
@@ -84,4 +101,84 @@ OPTIONS
 ```
 
 _See code: [src/commands/template-wordpress/__teardown.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__teardown.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:commit [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:commit [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/commit.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/commit.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:extract [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:extract [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/extract.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/extract.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:load [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:load [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/load.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/load.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:pack [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:pack [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/pack.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/pack.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:publish [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/publish.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/publish.ts)_
 <!-- commandsstop -->
