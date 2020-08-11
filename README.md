@@ -16,28 +16,30 @@ Commands to setup and use a blip project for wordpress site development
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g @lime.it/blip-wordpress
-$ oclif-example COMMAND
+$ npm install -g @lime.it/blip-template-wordpress
+$ @lime.it/blip-template-wordpress COMMAND
 running command...
-$ oclif-example (-v|--version|version)
-@lime.it/blip-wordpress/0.1.0 win32-x64 node-v10.16.0
-$ oclif-example --help [COMMAND]
+$ @lime.it/blip-template-wordpress (-v|--version|version)
+@lime.it/blip-template-wordpress/0.1.0 linux-x64 node-v12.18.3
+$ @lime.it/blip-template-wordpress --help [COMMAND]
 USAGE
-  $ oclif-example COMMAND
+  $ @lime.it/blip-template-wordpress COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`oclif-example hello [FILE]`](#oclif-example-hello-file)
+* [`@lime.it/blip-template-wordpress hello [FILE]`](#limeitblip-template-wordpress-hello-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__setup [FILE]`](#limeitblip-template-wordpress-template-wordpress__setup-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]`](#limeitblip-template-wordpress-template-wordpress__teardown-file)
 
-## `oclif-example hello [FILE]`
+## `@lime.it/blip-template-wordpress hello [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ oclif-example hello [FILE]
+  $ @lime.it/blip-template-wordpress hello [FILE]
 
 OPTIONS
   -f, --force
@@ -49,5 +51,37 @@ EXAMPLE
   hello world from ./src/hello.ts!
 ```
 
-_See code: [src\commands\hello.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src\commands\hello.ts)_
+_See code: [src/commands/hello.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/hello.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:__setup [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:__setup [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/__setup.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__setup.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/__teardown.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__teardown.ts)_
 <!-- commandsstop -->
