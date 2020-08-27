@@ -29,91 +29,86 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up [FILE]`](#limeitblip-template-wordpress-template-wordpress__hook_postrun_up-file)
-* [`@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down [FILE]`](#limeitblip-template-wordpress-template-wordpress__hook_prerun_down-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up`](#limeitblip-template-wordpress-template-wordpress__hook_postrun_up)
+* [`@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down`](#limeitblip-template-wordpress-template-wordpress__hook_prerun_down)
 * [`@lime.it/blip-template-wordpress template-wordpress:__setup`](#limeitblip-template-wordpress-template-wordpress__setup)
-* [`@lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]`](#limeitblip-template-wordpress-template-wordpress__teardown-file)
-* [`@lime.it/blip-template-wordpress template-wordpress:commit [FILE]`](#limeitblip-template-wordpress-template-wordpresscommit-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:__teardown`](#limeitblip-template-wordpress-template-wordpress__teardown)
+* [`@lime.it/blip-template-wordpress template-wordpress:commit`](#limeitblip-template-wordpress-template-wordpresscommit)
 * [`@lime.it/blip-template-wordpress template-wordpress:extract [FILE]`](#limeitblip-template-wordpress-template-wordpressextract-file)
 * [`@lime.it/blip-template-wordpress template-wordpress:load [FILE]`](#limeitblip-template-wordpress-template-wordpressload-file)
 * [`@lime.it/blip-template-wordpress template-wordpress:pack [FILE]`](#limeitblip-template-wordpress-template-wordpresspack-file)
 * [`@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`](#limeitblip-template-wordpress-template-wordpresspublish-file)
 
-## `@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up`
 
-describe the command here
+Executes post-up scritps for a wordpress template workspace
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/template-wordpress/__hook_postrun_up.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__hook_postrun_up.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down`
 
-describe the command here
+Executes pre-down scritps for a wordpress template workspace
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/template-wordpress/__hook_prerun_down.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__hook_prerun_down.ts)_
 
 ## `@lime.it/blip-template-wordpress template-wordpress:__setup`
 
-describe the command here
+Set up a blip-wordpress template workspace
 
 ```
 USAGE
   $ @lime.it/blip-template-wordpress template-wordpress:__setup
 
 OPTIONS
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help                     show CLI help
+  --mysql=mysql                  Mysql docker image tag
+  --wordpress=wordpress          Wordpress docker image tag
+  --wordpress-cli=wordpress-cli  Wordpress cli docker image tag
 ```
 
 _See code: [src/commands/template-wordpress/__setup.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__setup.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:__teardown`
 
-describe the command here
+Tear down a blip-wordpress template workspace
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:__teardown [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:__teardown
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/template-wordpress/__teardown.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__teardown.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:commit [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:commit`
 
-describe the command here
+Commits the current wordpress instance state to a loadable package
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:commit [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:commit
 
 OPTIONS
-  -f, --force
   -h, --help       show CLI help
-  -n, --name=name  name to print
+  -n, --name=name  [default: commit] Commit name
 ```
 
 _See code: [src/commands/template-wordpress/commit.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/commit.ts)_

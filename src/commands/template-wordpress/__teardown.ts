@@ -1,25 +1,50 @@
+import { WorkspaceTaskContext, DockerComposeTaskContext, MachineListTaskContext } from './../../utils';
+import { environment } from './../../environment';
 import {Command, flags} from '@oclif/command'
+import rimraf = require('rimraf');
+import { join } from 'path';
+import Listr = require('listr');
+import { DockerCompose, BlipWorkspace, DockerMachine, DockerPsResult, BlipConf, isMachineStoppy, isMachineStarty } from '@lime.it/blip-core';
 
 export default class TemplateWordpressTeardown extends Command {
-  static description = 'describe the command here'
+  static description = 'Tear down a blip-wordpress template workspace'
 
   static flags = {
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
   }
 
-  static args = [{name: 'file'}]
+  static args = []
 
   async run() {
     const {args, flags} = this.parse(TemplateWordpressTeardown)
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /home/gcanossa/Projects/lim-e.it/blip-wordpress/src/commands/template-wordpress/__teardown.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+    const composePath = join(environment.confPath, "docker-compose.yml");
+
+    const tasks = new Listr([
+      {
+        skip: (ctx:WorkspaceTaskContext&DockerComposeTaskContext&MachineListTaskContext) => 
+          !!ctx.machineList.find(p => p.name == ctx.workspace.defaultMachine && !isMachineStarty(p.state!)),
+        title: 'Checking running docker-compose services',
+        task: async (ctx:WorkspaceTaskContext&DockerComposeTaskContext&MachineListTaskContext) => {
+          const containers = await DockerCompose.ps(await DockerMachine.env(ctx.workspace.defaultMachine, 'bash'), composePath);
+          ctx.containers = containers;
+        }
+      },
+      {
+        title: 'Destroying docker-compose services',
+        skip: (ctx:WorkspaceTaskContext&DockerComposeTaskContext) => ctx.containers.length == 0,
+        task: async (ctx:WorkspaceTaskContext&DockerComposeTaskContext) => {
+          await DockerCompose.down(await DockerMachine.env(ctx.workspace.defaultMachine, 'bash'), composePath);
+        }
+      },
+      {
+        title: 'Removing wordpress template workspace files',
+        task: (ctx:any) => {
+          rimraf.sync(environment.confPath);
+        }
+      }
+    ]);
+    
+    await tasks.run({workspace: await BlipConf.readWorkspace(), containers: [], machineList: await DockerMachine.ls()});
   }
 }

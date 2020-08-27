@@ -1,17 +1,23 @@
+import { TemplateConfig } from './../../utils';
 import { environment } from './../../environment';
 import {Command, flags} from '@oclif/command'
-import { readFile } from 'fs-extra'
+import { readFile, mkdirp, writeFile } from 'fs-extra'
 import Mustache = require('mustache');
 import fetch = require('node-fetch');
 import cli from 'cli-ux'
+import inquirer = require('inquirer');
+import { join } from 'path';
+import { BlipConf } from '@lime.it/blip-core';
+import { getDockerImageTags } from '../../utils';
 
 export default class TemplateWordpressSetup extends Command {
-  static description = 'describe the command here'
+  static description = 'Set up a blip-wordpress template workspace'
 
   static flags = {
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'})
+    wordpress: flags.string({description: 'Wordpress docker image tag', required: false}),
+    'wordpress-cli': flags.string({description: 'Wordpress cli docker image tag', required: false}),
+    mysql: flags.string({description: 'Mysql docker image tag', required: false})
   }
 
   static args = []
@@ -19,18 +25,73 @@ export default class TemplateWordpressSetup extends Command {
   async run() {
     const {args, flags} = this.parse(TemplateWordpressSetup)
 
-    // const txt = await readFile(`${environment.packagePath}/../assets/development/docker-compose.yml.template`, 'utf-8')
-    // process.stdout.write(Mustache.render(txt, {images:{nginx:'1', mysql:'2',wordpress:'3'}}))
+    cli.action.start('Fetching compatible images tags...');
+    
+    const wordpressTags = await getDockerImageTags('wordpress', /^\d+\.\d+\.\d+\-php\d\.\d\-apache$/);    
+    const mysqlTags = await getDockerImageTags('mysql', /^\d+\.\d+\.\d+$/);
+    const wordpressCliTags = await getDockerImageTags('wordpress', /^cli-\d+\.\d+\.\d+\-php\d\.\d$/);
 
-    const teardown = 
-      (await cli.prompt(`Do you want to perform its teardown command (Yn)?`)).toLowerCase().charAt(0) == 'y';
+    cli.action.stop()
 
-    process.stdout.write(JSON.stringify((await (await fetch.default('https://registry.hub.docker.com/v1/repositories/wordpress/tags')).json() as {name:string}[])
-      .filter(p=>/^\d+\.\d+\.\d+\-php\d\.\d\-fpm$/.test(p.name))
-      .map(p=>p.name)
-      .reverse())
+    const inputs = (await inquirer.prompt([
+      !!flags.wordpress ? null :
+      {
+        name: 'wordpressTag',
+        message: 'Select a "fpm" wordpress image version',
+        type: 'list',
+        choices: wordpressTags,
+        default: wordpressTags[0],
+        
+      },
+      !!flags.mysql ? null :
+      {
+        name: 'mysqlTag',
+        message: 'Select a mysql image version',
+        type: 'list',
+        choices: mysqlTags,
+        default: mysqlTags[0]
+      },
+      !!flags['wordpress-cli'] ? null :
+      {
+        name: 'wordpressCliTag',
+        message: 'Select a wordpress cli image version',
+        type: 'list',
+        choices: wordpressCliTags,
+        default: wordpressCliTags[0]
+      }
+    ].filter(p=>!!p)));
+
+    const workspace = await BlipConf.readWorkspace();
+
+    const templateConfig:TemplateConfig = {
+      images:{
+        nginx:{tag:'latest'},
+        wordpress:{tag:flags.wordpress || inputs.wordpressTag},
+        'wordpress-cli':{tag:flags["wordpress-cli"] || inputs.wordpressCliTag},
+        mysql:{tag:flags.mysql || inputs.mysqlTag, above5: parseInt(/^(\d+)\./.exec(inputs.mysqlTag)![1])>5}
+      },
+      domain: workspace.machines[workspace.defaultMachine]?.domains?.find(p => !!p),
+      database:{
+        randomPassword: `dev${Math.round(Math.random()*10000)}pwd`
+      }
+    };
+
+    await mkdirp(environment.confPath);
+
+    await writeFile(
+      join(environment.confPath, "docker-compose.yml"), 
+      Mustache.render(
+        await readFile(join(environment.assetsPath, "docker-compose.yml.template"), 'utf-8'), templateConfig)
     );
 
-    return {value: 3}
+    await mkdirp(join(environment.confPath, "nginx"));
+
+    await writeFile(
+      join(environment.confPath, "nginx", "default.conf"), 
+      Mustache.render(
+        await readFile(join(environment.assetsPath, "default.conf.template"), 'utf-8'), templateConfig)
+    );
+
+    return templateConfig;
   }
 }

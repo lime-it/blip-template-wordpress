@@ -1,25 +1,38 @@
+import { MachineListTaskContext } from './../../utils';
 import {Command, flags} from '@oclif/command'
+import { join } from 'path'
+import { environment } from '../../environment'
+import Listr = require('listr')
+import { WorkspaceTaskContext } from '../../utils'
+import { DockerCompose, DockerMachine, BlipConf, isMachineStarty } from '@lime.it/blip-core'
 
 export default class TemplateWordpressHookPrerunDown extends Command {
-  static description = 'describe the command here'
+  static description = 'Executes pre-down scritps for a wordpress template workspace'
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    help: flags.help({char: 'h'})
   }
 
-  static args = [{name: 'file'}]
+  static args = []
 
   async run() {
     const {args, flags} = this.parse(TemplateWordpressHookPrerunDown)
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /home/gcanossa/Projects/lim-e.it/blip-wordpress/src/commands/template-wordpress/__hook_prerun_down.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+
+    const composePath = join(environment.confPath, "docker-compose.yml");
+
+    const tasks = new Listr([
+      {
+        skip: (ctx:WorkspaceTaskContext&MachineListTaskContext) => {
+          return !ctx.machineList.find(p => p.name == ctx.workspace.defaultMachine && isMachineStarty(p.state!));
+        },
+        title: 'Stopping docker-compose services',
+        task: async (ctx:WorkspaceTaskContext&MachineListTaskContext) => {
+          await DockerCompose.stop(await DockerMachine.env(ctx.workspace.defaultMachine, 'bash'), composePath);
+        }
+      }
+    ]);
+    
+    await tasks.run({workspace: await BlipConf.readWorkspace(), machineList: await DockerMachine.ls()});
   }
 }
