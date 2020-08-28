@@ -72,7 +72,7 @@ export default class TemplateWordpressSetup extends Command {
       },
       domain: workspace.machines[workspace.defaultMachine]?.domains?.find(p => !!p),
       database:{
-        randomPassword: `dev${Math.round(Math.random()*10000)}pwd`
+        randomPassword: Math.random().toString(36).slice(-8)
       }
     };
 

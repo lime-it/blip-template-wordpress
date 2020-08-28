@@ -3,14 +3,19 @@ import { TemplateConfig } from './utils';
 import { join } from 'path';
 import { environment } from './environment';
 import execa = require('execa');
-import { WriteStream } from 'fs-extra';
+import { WriteStream, ReadStream } from 'fs-extra';
 
 export interface WordpressCliTool {
   getSiteUrl():Promise<string>;
   exportToWritestream(stream:WriteStream):Promise<void>;
+  importFromReadStream(stream:ReadStream, siteUrl: string):Promise<void>;
 }
 
 const composePath = join(environment.confPath, "docker-compose.yml");
+
+const exportSiteUrl = 'BLIP_EXPORT_SITE_URL';
+const exportSiteUrlSchemaless = 'BLIP_EXPORT_SITE_URL_SCHEMALESS';
+const exportSiteUrlDomain = 'BLIP_EXPORT_SITE_URL_DOMAIN';
 
 class WordpressCliToolImpl implements WordpressCliTool{
 
@@ -26,7 +31,7 @@ class WordpressCliToolImpl implements WordpressCliTool{
       const wordpressContainerId = containers.find(p => p.image?.includes('wordpress'))!.id!;
 
       this.dockerArgs = [
-        'run', '--rm',
+        'run', '-i','--rm', '-u', '33',
         '--volumes-from', `${wordpressContainerId}`,
         '--network', `container:${wordpressContainerId}`,
         '--entrypoint', 'bash', `wordpress:${templateConfig.images["wordpress-cli"].tag}`,
@@ -42,10 +47,55 @@ class WordpressCliToolImpl implements WordpressCliTool{
   }
 
   async exportToWritestream(stream:WriteStream):Promise<void>{
-    const pr = execa('docker', [...this.dockerArgs!, 'wp db export bkp.sql > /dev/null && tar -czf tmp wp-content bkp.sql > /dev/null && cat tmp'],
+    await this.initialize();
+
+    const siteUrl = await this.getSiteUrl();
+    const SiteUrlSchemaless = siteUrl.replace(/^https?:/,'');
+    const siteUrlDomain = siteUrl.replace(/^https?:\/\//,'');
+
+    const pr = execa('docker', [...this.dockerArgs!, 
+      `
+      rm -rf blip-export && 
+      mkdir blip-export && 
+      cp -r ./wp-content ./blip-export/wp-content &&
+      cd blip-export && 
+      wp db export bkp.sql > /dev/null && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${siteUrl}|${exportSiteUrl}|g' && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${SiteUrlSchemaless}|${exportSiteUrlSchemaless}|g' && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${siteUrlDomain}|${exportSiteUrlDomain}|g' && 
+      tar -czf tmp wp-content bkp.sql > /dev/null && 
+      cat tmp`
+      .replace('\n','').replace('\r','')],
       { env: this.machineEnvironment as any });
     
     pr.stdout.pipe(stream);
+
+    await pr;
+  }
+
+  async importFromReadStream(stream:ReadStream, siteUrl: string):Promise<void>{
+    await this.initialize();
+
+    if(!/^(https?:\/\/[^\/]+)/.test(siteUrl))
+      throw new Error(`Invalid site ulr format '${siteUrl}'`);
+
+    siteUrl = /^(https?:\/\/[^\/]+)/.exec(siteUrl)![0];
+
+    const SiteUrlSchemaless = siteUrl.replace(/^https?:/,'');
+    const siteUrlDomain = siteUrl.replace(/^https?:\/\//,'');
+
+    const pr = execa('docker', 
+      [...this.dockerArgs!, 
+      `
+      rm -rf wp-content && 
+      tar -xzf - && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrl}|${siteUrl}|g' && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrlSchemaless}|${SiteUrlSchemaless}|g' && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrlDomain}|${siteUrlDomain}|g' && 
+      wp db import bkp.sql && 
+      rm bkp.sql`
+      .replace('\n','').replace('\r','')],
+      { env: this.machineEnvironment as any, input: stream, stdin: 'pipe'});
 
     await pr;
   }
