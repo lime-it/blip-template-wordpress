@@ -1,10 +1,10 @@
 import { WorkspaceTaskContext, DockerComposeTaskContext, MachineListTaskContext } from './../../utils';
 import { environment } from './../../environment';
 import {Command, flags} from '@oclif/command'
-import rimraf = require('rimraf');
 import { join } from 'path';
 import Listr = require('listr');
 import { DockerCompose, BlipWorkspace, DockerMachine, DockerPsResult, BlipConf, isMachineStoppy, isMachineStarty } from '@lime.it/blip-core';
+import { remove } from 'fs-extra';
 
 export default class TemplateWordpressTeardown extends Command {
   static description = 'Tear down a blip-wordpress template workspace'
@@ -40,7 +40,7 @@ export default class TemplateWordpressTeardown extends Command {
       {
         title: 'Removing wordpress template workspace files',
         task: (ctx:any) => {
-          rimraf.sync(environment.confPath);
+          remove(environment.confPath);
         }
       }
     ]);

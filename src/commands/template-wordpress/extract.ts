@@ -1,25 +1,60 @@
+import { DockerCompose, BlipConf, DockerMachine } from '@lime.it/blip-core';
+import { WordpressCli } from './../../wordpress-cli';
 import {Command, flags} from '@oclif/command'
+import { ensureDir, remove, readFile, writeFile } from 'fs-extra'
+import { environment } from '../../environment'
+import { isExtWordpressSrcAvailable, WorkspaceTaskContext, isWorkingAsExtracted } from '../../utils';
+import * as YAML from 'yaml';
+import { join, resolve } from 'path';
+import Listr = require('listr');
 
 export default class TemplateWordpressExtract extends Command {
-  static description = 'describe the command here'
+  static description = 'Extracts wordpress wwwroot in order to directly modify its sources'
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    help: flags.help({char: 'h'})
   }
 
-  static args = [{name: 'file'}]
+  static args = []
 
   async run() {
     const {args, flags} = this.parse(TemplateWordpressExtract)
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /home/gcanossa/Projects/lim-e.it/blip-wordpress/src/commands/template-wordpress/extract.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
+    if(await isWorkingAsExtracted()) {
+      this.log("Nothing to do. The wordpress instance is already working as extracted.")
+      return;
     }
+
+    const tasks = new Listr([
+      {
+        title: `Extracting /var/www/html => ${resolve(environment.localExtWpPath)}`,
+        task: async (ctx:WorkspaceTaskContext) => {
+          
+          await remove(environment.localExtWpPath);
+          await ensureDir(environment.localExtWpPath);
+
+          await WordpressCli.extractPathToHostPath("/var/www/html", environment.machineWpPath);
+        }
+      },
+      {
+        title: `Updating docker-compose setup`,
+        task: async (ctx:WorkspaceTaskContext) => {
+
+          const composePath = join(environment.confPath, "docker-compose.yml");
+          const bindVolumeConf = `${environment.machineWpPath}:/var/www/html`;
+
+          const dockerCompose = YAML.parse(await readFile(composePath, 'utf8'));
+      
+          const volumes:string[] = dockerCompose.services.wordpress.volumes = dockerCompose.services.wordpress.volumes || [];
+          if(!volumes.includes(bindVolumeConf))
+            volumes.push(bindVolumeConf);
+
+          await writeFile(composePath, YAML.stringify(dockerCompose, { version:'1.1' }));
+          await DockerCompose.up(await DockerMachine.env(ctx.workspace.defaultMachine, 'bash'), composePath);
+        }
+      }
+    ]);
+    
+    await tasks.run({workspace: await BlipConf.readWorkspace()});
   }
 }

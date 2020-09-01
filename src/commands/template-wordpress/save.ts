@@ -1,14 +1,14 @@
-import { WordpressCli } from './../../wordpress-cli';
+import { WordpressCli } from '../../wordpress-cli';
 import {Command, flags} from '@oclif/command'
 import { BlipConf, DockerMachine } from '@lime.it/blip-core'
 import Listr = require('listr')
 import { join } from 'path'
 import { environment } from '../../environment'
 import { WorkspaceTaskContext, MachineListTaskContext } from '../../utils'
-import { mkdirp, createWriteStream } from 'fs-extra';
+import { mkdirp, createWriteStream, ensureDir } from 'fs-extra';
 
-export default class TemplateWordpressCommit extends Command {
-  static description = 'Commits the current wordpress instance state to a loadable package'
+export default class TemplateWordpressSave extends Command {
+  static description = 'Saves the current wordpress instance state to a loadable package'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -18,18 +18,17 @@ export default class TemplateWordpressCommit extends Command {
   static args = []
 
   async run() {
-    const {args, flags} = this.parse(TemplateWordpressCommit)
+    const {args, flags} = this.parse(TemplateWordpressSave)
 
-    const composePath = join(environment.confPath, "docker-compose.yml");
     const commitName = `${new Date().getTime()}-${flags.name}`;
-    const commitFilePath = join(environment.confPath, "repo", `${commitName}.tar.gz`);
+    const commitFilePath = join(environment.repoPath, `${commitName}.tar.gz`);
 
     const tasks = new Listr([
       {
         title: `Commiting status to ${commitName}`,
-        task: async (ctx:WorkspaceTaskContext&MachineListTaskContext) => {
+        task: async (ctx:any) => {
           
-          await mkdirp(join(environment.confPath, "repo"));
+          await ensureDir(environment.repoPath);
 
           const stream = createWriteStream(commitFilePath);
           
@@ -40,6 +39,6 @@ export default class TemplateWordpressCommit extends Command {
       }
     ]);
     
-    await tasks.run({workspace: await BlipConf.readWorkspace(), machineList: await DockerMachine.ls()});
+    await tasks.run();
   }
 }

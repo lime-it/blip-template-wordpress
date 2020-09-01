@@ -1,6 +1,6 @@
 import {Command, flags} from '@oclif/command'
 
-export default class TemplateWordpressPack extends Command {
+export default class TemplateWordpressInstall extends Command {
   static description = 'describe the command here'
 
   static flags = {
@@ -14,10 +14,10 @@ export default class TemplateWordpressPack extends Command {
   static args = [{name: 'file'}]
 
   async run() {
-    const {args, flags} = this.parse(TemplateWordpressPack)
+    const {args, flags} = this.parse(TemplateWordpressInstall)
 
     const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /home/gcanossa/Projects/lim-e.it/blip-wordpress/src/commands/template-wordpress/pack.ts`)
+    this.log(`hello ${name} from /home/gcanossa/Projects/lim-e.it/blip-wordpress/src/commands/template-wordpress/install.ts`)
     if (args.file && flags.force) {
       this.log(`you input --force and --file: ${args.file}`)
     }

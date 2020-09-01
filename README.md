@@ -33,11 +33,11 @@ USAGE
 * [`@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down`](#limeitblip-template-wordpress-template-wordpress__hook_prerun_down)
 * [`@lime.it/blip-template-wordpress template-wordpress:__setup`](#limeitblip-template-wordpress-template-wordpress__setup)
 * [`@lime.it/blip-template-wordpress template-wordpress:__teardown`](#limeitblip-template-wordpress-template-wordpress__teardown)
-* [`@lime.it/blip-template-wordpress template-wordpress:commit`](#limeitblip-template-wordpress-template-wordpresscommit)
-* [`@lime.it/blip-template-wordpress template-wordpress:extract [FILE]`](#limeitblip-template-wordpress-template-wordpressextract-file)
-* [`@lime.it/blip-template-wordpress template-wordpress:load [FILE]`](#limeitblip-template-wordpress-template-wordpressload-file)
-* [`@lime.it/blip-template-wordpress template-wordpress:pack [FILE]`](#limeitblip-template-wordpress-template-wordpresspack-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:extract`](#limeitblip-template-wordpress-template-wordpressextract)
+* [`@lime.it/blip-template-wordpress template-wordpress:install [FILE]`](#limeitblip-template-wordpress-template-wordpressinstall-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:load`](#limeitblip-template-wordpress-template-wordpressload)
 * [`@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`](#limeitblip-template-wordpress-template-wordpresspublish-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:save`](#limeitblip-template-wordpress-template-wordpresssave)
 
 ## `@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up`
 
@@ -98,68 +98,51 @@ OPTIONS
 
 _See code: [src/commands/template-wordpress/__teardown.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__teardown.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:commit`
+## `@lime.it/blip-template-wordpress template-wordpress:extract`
 
-Commits the current wordpress instance state to a loadable package
-
-```
-USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:commit
-
-OPTIONS
-  -h, --help       show CLI help
-  -n, --name=name  [default: commit] Commit name
-```
-
-_See code: [src/commands/template-wordpress/commit.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/commit.ts)_
-
-## `@lime.it/blip-template-wordpress template-wordpress:extract [FILE]`
-
-describe the command here
+Extracts wordpress wwwroot in order to directly modify its sources
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:extract [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:extract
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/template-wordpress/extract.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/extract.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:load [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:install [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:load [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:install [FILE]
 
 OPTIONS
   -f, --force
   -h, --help       show CLI help
   -n, --name=name  name to print
+```
+
+_See code: [src/commands/template-wordpress/install.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/install.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:load`
+
+describe the command here
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:load
+
+OPTIONS
+  -h, --help             show CLI help
+  --from-commits
+  --from-file=from-file
 ```
 
 _See code: [src/commands/template-wordpress/load.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/load.ts)_
-
-## `@lime.it/blip-template-wordpress template-wordpress:pack [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:pack [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/template-wordpress/pack.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/pack.ts)_
 
 ## `@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`
 
@@ -176,4 +159,19 @@ OPTIONS
 ```
 
 _See code: [src/commands/template-wordpress/publish.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/publish.ts)_
+
+## `@lime.it/blip-template-wordpress template-wordpress:save`
+
+Saves the current wordpress instance state to a loadable package
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:save
+
+OPTIONS
+  -h, --help       show CLI help
+  -n, --name=name  [default: commit] Commit name
+```
+
+_See code: [src/commands/template-wordpress/save.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/save.ts)_
 <!-- commandsstop -->

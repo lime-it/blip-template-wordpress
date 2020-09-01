@@ -9,6 +9,7 @@ export interface WordpressCliTool {
   getSiteUrl():Promise<string>;
   exportToWritestream(stream:WriteStream):Promise<void>;
   importFromReadStream(stream:ReadStream, siteUrl: string):Promise<void>;
+  extractPathToHostPath(containerPath:string, hostPath:string):Promise<void>;
 }
 
 const composePath = join(environment.confPath, "docker-compose.yml");
@@ -96,6 +97,26 @@ class WordpressCliToolImpl implements WordpressCliTool{
       rm bkp.sql`
       .replace('\n','').replace('\r','')],
       { env: this.machineEnvironment as any, input: stream, stdin: 'pipe'});
+
+    await pr;
+  }
+
+  async extractPathToHostPath(containerPath:string, hostPath:string):Promise<void>{
+    await this.initialize();
+
+    const tmpFolder = `/tmp-copy-${Math.round(Math.random()*10000)}`;
+
+    const dockerArgs = [...this.dockerArgs!];
+    dockerArgs.splice(dockerArgs.indexOf('--volumes-from'), 0, '-v', `${hostPath}:${tmpFolder}`);
+    dockerArgs[dockerArgs.indexOf('-u')+1] = '0';
+
+    const pr = execa('docker', 
+      [...dockerArgs, 
+      `
+      rm -rf blip-export && 
+      cp -r ${containerPath}/* ${tmpFolder}`
+      .replace('\n','').replace('\r','')],
+      { env: this.machineEnvironment as any});
 
     await pr;
   }
