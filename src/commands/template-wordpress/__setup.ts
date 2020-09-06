@@ -3,12 +3,12 @@ import { environment } from './../../environment';
 import {Command, flags} from '@oclif/command'
 import { readFile, mkdirp, writeFile } from 'fs-extra'
 import Mustache = require('mustache');
-import fetch = require('node-fetch');
 import cli from 'cli-ux'
 import inquirer = require('inquirer');
 import { join } from 'path';
 import { BlipConf } from '@lime.it/blip-core';
 import { getDockerImageTags } from '../../utils';
+import execa = require('execa');
 
 export default class TemplateWordpressSetup extends Command {
   static description = 'Set up a blip-wordpress template workspace'
@@ -91,6 +91,8 @@ export default class TemplateWordpressSetup extends Command {
       Mustache.render(
         await readFile(join(environment.assetsPath, "default.conf.template"), 'utf-8'), templateConfig)
     );
+
+    await execa("git", ['lfs', 'track', '.wordpress/repo/*.tar.gz']);
 
     return templateConfig;
   }

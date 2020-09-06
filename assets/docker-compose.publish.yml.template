@@ -1,17 +1,6 @@
 version: '3.7'
 
 services:
-  nginx:
-    image: nginx:{{ images.nginx.tag }}
-    volumes:
-      - /home/docker/project/.wordpress/nginx:/etc/nginx/conf.d
-      - /home/docker/project/.blip/certs:/etc/nginx/auth
-    depends_on:
-      - wordpress
-      - database
-    ports:
-      - "80:80"
-      - "443:443"
   database:
     image: mysql:{{ images.mysql.tag }}
     {{#images.mysql.above5}}
@@ -22,8 +11,6 @@ services:
       MYSQL_USER: wp-db
       MYSQL_PASSWORD: {{ database.randomPassword }}
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-    ports:
-      - "3306:3306"
   wordpress:
     image: wordpress:{{ images.wordpress.tag }}
     environment:

@@ -7,7 +7,7 @@ import { WriteStream, ReadStream } from 'fs-extra';
 
 export interface WordpressCliTool {
   getSiteUrl():Promise<string>;
-  exportToWritestream(stream:WriteStream):Promise<void>;
+  exportToWritestream(stream:WriteStream, contentOnly:boolean):Promise<void>;
   importFromReadStream(stream:ReadStream, siteUrl: string):Promise<void>;
   extractPathToHostPath(containerPath:string, hostPath:string):Promise<void>;
 }
@@ -47,18 +47,20 @@ class WordpressCliToolImpl implements WordpressCliTool{
     return (await execa('docker', [...this.dockerArgs!, 'wp option get siteurl'], { env: this.machineEnvironment as any })).stdout;
   }
 
-  async exportToWritestream(stream:WriteStream):Promise<void>{
+  async exportToWritestream(stream:WriteStream, contentOnly:boolean):Promise<void>{
     await this.initialize();
 
     const siteUrl = await this.getSiteUrl();
     const SiteUrlSchemaless = siteUrl.replace(/^https?:/,'');
     const siteUrlDomain = siteUrl.replace(/^https?:\/\//,'');
 
+    const pathToExport = contentOnly ? 'wp-content' : '';
+
     const pr = execa('docker', [...this.dockerArgs!, 
       `
       rm -rf blip-export && 
       mkdir blip-export && 
-      cp -r ./wp-content ./blip-export/wp-content &&
+      cp -r ./${pathToExport} ./blip-export/${pathToExport} &&
       cd blip-export && 
       wp db export bkp.sql > /dev/null && 
       find ./ -type f -print0 | xargs -0 sed -i 's|${siteUrl}|${exportSiteUrl}|g' && 

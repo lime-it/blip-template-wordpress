@@ -9,6 +9,7 @@ export const environment = {
     confPath: join(BlipConf.getWorkspaceRootPath(), ".wordpress"),
     assetsPath: join(packagePath,"../assets"),
     repoPath: join(BlipConf.getWorkspaceRootPath(), ".wordpress", "repo"),
+    publishPath: join(BlipConf.getWorkspaceRootPath(), ".wordpress", "publish"),
     localExtWpPath: join(BlipConf.getWorkspaceRootPath(), 'wp-src'),
     machineWpPath: join('/home/docker/project', 'wp-src')
 }

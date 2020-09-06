@@ -4,7 +4,7 @@ import { BlipConf, DockerMachine } from '@lime.it/blip-core'
 import Listr = require('listr')
 import { join } from 'path'
 import { environment } from '../../environment'
-import { WorkspaceTaskContext, MachineListTaskContext } from '../../utils'
+import { WorkspaceTaskContext, MachineListTaskContext, isWorkingAsExtracted } from '../../utils'
 import { mkdirp, createWriteStream, ensureDir } from 'fs-extra';
 
 export default class TemplateWordpressSave extends Command {
@@ -32,7 +32,7 @@ export default class TemplateWordpressSave extends Command {
 
           const stream = createWriteStream(commitFilePath);
           
-          await WordpressCli.exportToWritestream(stream);
+          await WordpressCli.exportToWritestream(stream, await isWorkingAsExtracted() == false);
           
           stream.close();
         }

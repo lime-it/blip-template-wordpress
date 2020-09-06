@@ -10,12 +10,12 @@ import { WorkspaceTaskContext, MachineListTaskContext } from '../../utils'
 import { BlipConf } from '@lime.it/blip-core'
 
 export default class TemplateWordpressLoad extends Command {
-  static description = 'describe the command here'
+  static description = 'Load a saved state to a clean wordpress/mysql container instance.'
 
   static flags = {
     help: flags.help({char: 'h'}),
-    'from-file': flags.string({required: false}),
-    'from-commits': flags.boolean({required: false, default: false})
+    'from-file': flags.string({required: false, description:'Import from a tarball at a given path'}),
+    'from-commits': flags.boolean({required: false, default: false, description: 'Select a commit to load'})
   }
 
   static args = []

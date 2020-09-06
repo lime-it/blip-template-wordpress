@@ -33,10 +33,11 @@ USAGE
 * [`@lime.it/blip-template-wordpress template-wordpress:__hook_prerun_down`](#limeitblip-template-wordpress-template-wordpress__hook_prerun_down)
 * [`@lime.it/blip-template-wordpress template-wordpress:__setup`](#limeitblip-template-wordpress-template-wordpress__setup)
 * [`@lime.it/blip-template-wordpress template-wordpress:__teardown`](#limeitblip-template-wordpress-template-wordpress__teardown)
+* [`@lime.it/blip-template-wordpress template-wordpress:clean`](#limeitblip-template-wordpress-template-wordpressclean)
 * [`@lime.it/blip-template-wordpress template-wordpress:extract`](#limeitblip-template-wordpress-template-wordpressextract)
-* [`@lime.it/blip-template-wordpress template-wordpress:install [FILE]`](#limeitblip-template-wordpress-template-wordpressinstall-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:install FILE DOMAIN`](#limeitblip-template-wordpress-template-wordpressinstall-file-domain)
 * [`@lime.it/blip-template-wordpress template-wordpress:load`](#limeitblip-template-wordpress-template-wordpressload)
-* [`@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`](#limeitblip-template-wordpress-template-wordpresspublish-file)
+* [`@lime.it/blip-template-wordpress template-wordpress:publish`](#limeitblip-template-wordpress-template-wordpresspublish)
 * [`@lime.it/blip-template-wordpress template-wordpress:save`](#limeitblip-template-wordpress-template-wordpresssave)
 
 ## `@lime.it/blip-template-wordpress template-wordpress:__hook_postrun_up`
@@ -98,6 +99,21 @@ OPTIONS
 
 _See code: [src/commands/template-wordpress/__teardown.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/__teardown.ts)_
 
+## `@lime.it/blip-template-wordpress template-wordpress:clean`
+
+Clear the local saved commits repo.
+
+```
+USAGE
+  $ @lime.it/blip-template-wordpress template-wordpress:clean
+
+OPTIONS
+  -h, --help  show CLI help
+  -y, --yes   If set no confirmation prompt will be asked.
+```
+
+_See code: [src/commands/template-wordpress/clean.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/clean.ts)_
+
 ## `@lime.it/blip-template-wordpress template-wordpress:extract`
 
 Extracts wordpress wwwroot in order to directly modify its sources
@@ -112,25 +128,30 @@ OPTIONS
 
 _See code: [src/commands/template-wordpress/extract.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/extract.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:install [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:install FILE DOMAIN`
 
-describe the command here
+Installs an exported wordpress instance tarball.
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:install [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:install FILE DOMAIN
+
+ARGUMENTS
+  FILE    [default: ./release.tar.gz] Path to the file to be installed or imported
+  DOMAIN  Site exposing domain
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help                 show CLI help
+  --container=container      Existing wordpress container id
+  --destination=destination  (required) [default: ./] Destination path of the docker-compose file
+  --machine=machine          Docker machine on which execute commands
 ```
 
 _See code: [src/commands/template-wordpress/install.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/install.ts)_
 
 ## `@lime.it/blip-template-wordpress template-wordpress:load`
 
-describe the command here
+Load a saved state to a clean wordpress/mysql container instance.
 
 ```
 USAGE
@@ -138,24 +159,22 @@ USAGE
 
 OPTIONS
   -h, --help             show CLI help
-  --from-commits
-  --from-file=from-file
+  --from-commits         Select a commit to load
+  --from-file=from-file  Import from a tarball at a given path
 ```
 
 _See code: [src/commands/template-wordpress/load.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/load.ts)_
 
-## `@lime.it/blip-template-wordpress template-wordpress:publish [FILE]`
+## `@lime.it/blip-template-wordpress template-wordpress:publish`
 
-describe the command here
+Creates an installable tarball for the wordpress instance
 
 ```
 USAGE
-  $ @lime.it/blip-template-wordpress template-wordpress:publish [FILE]
+  $ @lime.it/blip-template-wordpress template-wordpress:publish
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/template-wordpress/publish.ts](https://github.com/lime-it/blip-wordpress/blob/v0.1.0/src/commands/template-wordpress/publish.ts)_
