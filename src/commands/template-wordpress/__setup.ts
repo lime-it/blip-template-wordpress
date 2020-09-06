@@ -93,6 +93,7 @@ export default class TemplateWordpressSetup extends Command {
     );
 
     await execa("git", ['lfs', 'track', '.wordpress/repo/*.tar.gz']);
+    await execa("git", ['add', '.gitattributes']);
 
     return templateConfig;
   }
