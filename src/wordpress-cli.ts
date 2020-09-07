@@ -63,9 +63,9 @@ class WordpressCliToolImpl implements WordpressCliTool{
       cp -r ./${pathToExport} ./blip-export/${pathToExport} &&
       cd blip-export && 
       wp db export bkp.sql > /dev/null && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${siteUrl}|${exportSiteUrl}|g' && 
       find ./ -type f -print0 | xargs -0 sed -i 's|${SiteUrlSchemaless}|${exportSiteUrlSchemaless}|g' && 
       find ./ -type f -print0 | xargs -0 sed -i 's|${siteUrlDomain}|${exportSiteUrlDomain}|g' && 
-      find ./ -type f -print0 | xargs -0 sed -i 's|${siteUrl}|${exportSiteUrl}|g' && 
       tar -czf tmp wp-content bkp.sql > /dev/null && 
       cat tmp`
       .replace('\n','').replace('\r','')],
@@ -91,10 +91,10 @@ class WordpressCliToolImpl implements WordpressCliTool{
       [...this.dockerArgs!, 
       `
       rm -rf wp-content && 
-      tar -xzf - && 
-      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrl}|${siteUrl}|g' && 
-      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrlSchemaless}|${SiteUrlSchemaless}|g' && 
+      tar -xzf - &&  
       find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrlDomain}|${siteUrlDomain}|g' && 
+      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrlSchemaless}|${SiteUrlSchemaless}|g' &&
+      find ./ -type f -print0 | xargs -0 sed -i 's|${exportSiteUrl}|${siteUrl}|g' && 
       wp db import bkp.sql && 
       rm bkp.sql`
       .replace('\n','').replace('\r','')],
