@@ -60,7 +60,7 @@ export default class TemplateWordpressLoad extends Command {
 
           const stream = createReadStream(filePathName!);
           
-          await WordpressCli.importFromReadStream(stream, ctx.workspace.machines[ctx.workspace.defaultMachine].domains[0]);
+          await WordpressCli.importFromReadStream(stream, `https://${ctx.workspace.machines[ctx.workspace.defaultMachine].domains[0]}`);
           
           stream.close();
         }

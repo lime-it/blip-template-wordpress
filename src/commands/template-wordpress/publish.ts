@@ -22,6 +22,8 @@ export default class TemplateWordpressPublish extends Command {
   async run() {
     const {args, flags} = this.parse(TemplateWordpressPublish)
     
+    await ensureDir(environment.repoPath);
+
     const commits = (await readdir(environment.repoPath)).map(p => /^(\d+)\-(.+)\.tar\.gz$/.exec(p)).filter(p=>!!p)
       .map(p=>({timestamp:parseInt(p![1]), title:p![2], fileName: p![0]}))
       .sort((a,b)=>b.timestamp - a.timestamp)
